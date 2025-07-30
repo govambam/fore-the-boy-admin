@@ -95,6 +95,10 @@ export function HoleEdit() {
     setScores(prev => ({ ...prev, [player]: value }));
   };
 
+  const handleTeamScoreChange = (team: string, value: string) => {
+    setTeamScores(prev => ({ ...prev, [team]: value }));
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
