@@ -30,7 +30,7 @@ export function HoleEdit() {
 
   const contestHoles = CONTEST_HOLES[roundName];
   const hasContest = contestHoles.longDrive.includes(holeNumber) || contestHoles.closestToPin.includes(holeNumber);
-  const contestType = contestHoles.longDrive.includes(holeNumber) ? '🏌 Long Drive' : '🎯 Closest to the Pin';
+  const contestType = contestHoles.longDrive.includes(holeNumber) ? '���� Long Drive' : '🎯 Closest to the Pin';
 
   const isQuicksands = roundName === 'Quicksands';
   const teams = [
@@ -44,7 +44,7 @@ export function HoleEdit() {
     // Fallback timeout to prevent infinite loading
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 10000); // 10 second timeout
+    }, 3000); // 3 second timeout
 
     return () => clearTimeout(timeout);
   }, [round, hole]);
