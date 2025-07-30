@@ -28,7 +28,7 @@ export function Scorecard() {
     // Fallback timeout to prevent infinite loading
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 10000); // 10 second timeout
+    }, 3000); // 3 second timeout
 
     return () => clearTimeout(timeout);
   }, [round]);
