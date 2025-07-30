@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Target, AlertCircle } from "lucide-react";
+import { Trophy, AlertCircle } from "lucide-react";
 
 interface LoginProps {
   onLogin: () => void;
