@@ -11,6 +11,19 @@ interface HomeProps {
 export function Home({ onLogout }: HomeProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
+      {/* Logout button in top right */}
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onLogout}
+          className="gap-2 text-gray-500 hover:text-gray-700"
+        >
+          <LogOut className="h-4 w-4" />
+          Logout
+        </Button>
+      </div>
+
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 bg-green-600 rounded-full">
