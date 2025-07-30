@@ -40,6 +40,13 @@ export function HoleEdit() {
 
   useEffect(() => {
     loadHoleData();
+
+    // Fallback timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 10000); // 10 second timeout
+
+    return () => clearTimeout(timeout);
   }, [round, hole]);
 
   const loadHoleData = async () => {
