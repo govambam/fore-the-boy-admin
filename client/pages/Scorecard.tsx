@@ -1,8 +1,22 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { supabase, PLAYERS, ROUNDS, CONTEST_HOLES, Score, Contest, Round, Player } from "../lib/supabase";
+import {
+  supabase,
+  PLAYERS,
+  ROUNDS,
+  CONTEST_HOLES,
+  Score,
+  Contest,
+  Round,
+  Player,
+} from "../lib/supabase";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { ArrowLeft, Trophy, Target } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -12,8 +26,10 @@ export function Scorecard() {
   const [contests, setContests] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
 
-  const currentRound = ROUNDS.find(r => r.name === decodeURIComponent(round || ''));
-  
+  const currentRound = ROUNDS.find(
+    (r) => r.name === decodeURIComponent(round || ""),
+  );
+
   if (!currentRound) {
     return <div>Round not found</div>;
   }
@@ -38,22 +54,22 @@ export function Scorecard() {
     try {
       // Load scores with timeout
       const { data: scoresData, error: scoresError } = await supabase
-        .from('scores')
-        .select('*')
-        .eq('round', roundName);
+        .from("scores")
+        .select("*")
+        .eq("round", roundName);
 
       if (scoresError) {
-        console.error('Error loading scores:', scoresError);
+        console.error("Error loading scores:", scoresError);
       }
 
       // Load contests with timeout
       const { data: contestsData, error: contestsError } = await supabase
-        .from('contests')
-        .select('*')
-        .eq('round', roundName);
+        .from("contests")
+        .select("*")
+        .eq("round", roundName);
 
       if (contestsError) {
-        console.error('Error loading contests:', contestsError);
+        console.error("Error loading contests:", contestsError);
       }
 
       // Process scores
@@ -72,7 +88,7 @@ export function Scorecard() {
       setScores(scoresMap);
       setContests(contestsMap);
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error("Error loading data:", error);
       // Continue loading the UI even if database connection fails
     } finally {
       setLoading(false);
@@ -89,19 +105,26 @@ export function Scorecard() {
     return scores[key] || null;
   };
 
-  const isQuicksands = roundName === 'Quicksands';
+  const isQuicksands = roundName === "Quicksands";
   const teams = [
-    { name: 'Team 1', players: 'Ivan + Jack', lead: 'Ivan' as Player },
-    { name: 'Team 2', players: 'Patrick + Marshall', lead: 'Patrick' as Player }
+    { name: "Team 1", players: "Ivan + Jack", lead: "Ivan" as Player },
+    {
+      name: "Team 2",
+      players: "Patrick + Marshall",
+      lead: "Patrick" as Player,
+    },
   ];
 
   const hasContest = (hole: number) => {
-    return contestHoles.longDrive.includes(hole) || contestHoles.closestToPin.includes(hole);
+    return (
+      contestHoles.longDrive.includes(hole) ||
+      contestHoles.closestToPin.includes(hole)
+    );
   };
 
   const getContestType = (hole: number) => {
-    if (contestHoles.longDrive.includes(hole)) return '🏌 Long Drive';
-    if (contestHoles.closestToPin.includes(hole)) return '🎯 Closest to Pin';
+    if (contestHoles.longDrive.includes(hole)) return "🏌 Long Drive";
+    if (contestHoles.closestToPin.includes(hole)) return "🎯 Closest to Pin";
     return null;
   };
 
@@ -164,16 +187,22 @@ export function Scorecard() {
                     >
                       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div>
-                          <span className="font-medium text-sm block">{team.name}</span>
-                          <span className="text-xs text-gray-600">{team.players}</span>
+                          <span className="font-medium text-sm block">
+                            {team.name}
+                          </span>
+                          <span className="text-xs text-gray-600">
+                            {team.players}
+                          </span>
                         </div>
-                        <div className={cn(
-                          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
-                          getTeamScore(team.lead, hole)
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-gray-200 text-gray-500"
-                        )}>
-                          {getTeamScore(team.lead, hole) || '–'}
+                        <div
+                          className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
+                            getTeamScore(team.lead, hole)
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-gray-200 text-gray-500",
+                          )}
+                        >
+                          {getTeamScore(team.lead, hole) || "–"}
                         </div>
                       </div>
                     </Link>
@@ -189,13 +218,15 @@ export function Scorecard() {
                     >
                       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <span className="font-medium text-sm">{player}</span>
-                        <div className={cn(
-                          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
-                          getScore(player, hole)
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-gray-200 text-gray-500"
-                        )}>
-                          {getScore(player, hole) || '–'}
+                        <div
+                          className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
+                            getScore(player, hole)
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-gray-200 text-gray-500",
+                          )}
+                        >
+                          {getScore(player, hole) || "–"}
                         </div>
                       </div>
                     </Link>
@@ -216,16 +247,22 @@ export function Scorecard() {
                 <thead>
                   <tr className="border-b-2 bg-gray-50">
                     <th className="p-4 text-left font-semibold text-gray-900 sticky left-0 bg-gray-50 z-10">
-                      {isQuicksands ? 'Team' : 'Player'}
+                      {isQuicksands ? "Team" : "Player"}
                     </th>
                     {holes.map((hole) => (
                       <th key={hole} className="p-3 text-center min-w-[60px]">
                         <div className="flex flex-col items-center gap-1">
-                          <span className="font-semibold text-gray-900">{hole}</span>
+                          <span className="font-semibold text-gray-900">
+                            {hole}
+                          </span>
                           {hasContest(hole) && (
                             <div className="text-xs text-orange-600">
-                              {contestHoles.longDrive.includes(hole) && <Trophy className="h-3 w-3" />}
-                              {contestHoles.closestToPin.includes(hole) && <Target className="h-3 w-3" />}
+                              {contestHoles.longDrive.includes(hole) && (
+                                <Trophy className="h-3 w-3" />
+                              )}
+                              {contestHoles.closestToPin.includes(hole) && (
+                                <Target className="h-3 w-3" />
+                              )}
                             </div>
                           )}
                           {getContestWinner(hole) && (
@@ -239,58 +276,69 @@ export function Scorecard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {isQuicksands ? teams.map((team) => (
-                    <tr key={team.name} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
-                        <div>
-                          <div className="font-semibold">{team.name}</div>
-                          <div className="text-sm text-gray-600">{team.players}</div>
-                        </div>
-                      </td>
-                      {holes.map((hole) => (
-                        <td key={hole} className="p-3 text-center">
-                          <Link to={`/hole/${encodeURIComponent(roundName)}/${hole}`}>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={cn(
-                                "w-10 h-10 rounded-full font-semibold",
-                                getTeamScore(team.lead, hole)
-                                  ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                              )}
-                            >
-                              {getTeamScore(team.lead, hole) || '–'}
-                            </Button>
-                          </Link>
-                        </td>
+                  {isQuicksands
+                    ? teams.map((team) => (
+                        <tr
+                          key={team.name}
+                          className="border-b hover:bg-gray-50"
+                        >
+                          <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
+                            <div>
+                              <div className="font-semibold">{team.name}</div>
+                              <div className="text-sm text-gray-600">
+                                {team.players}
+                              </div>
+                            </div>
+                          </td>
+                          {holes.map((hole) => (
+                            <td key={hole} className="p-3 text-center">
+                              <Link
+                                to={`/hole/${encodeURIComponent(roundName)}/${hole}`}
+                              >
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className={cn(
+                                    "w-10 h-10 rounded-full font-semibold",
+                                    getTeamScore(team.lead, hole)
+                                      ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                      : "bg-gray-100 text-gray-500 hover:bg-gray-200",
+                                  )}
+                                >
+                                  {getTeamScore(team.lead, hole) || "–"}
+                                </Button>
+                              </Link>
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    : PLAYERS.map((player) => (
+                        <tr key={player} className="border-b hover:bg-gray-50">
+                          <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
+                            {player}
+                          </td>
+                          {holes.map((hole) => (
+                            <td key={hole} className="p-3 text-center">
+                              <Link
+                                to={`/hole/${encodeURIComponent(roundName)}/${hole}`}
+                              >
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className={cn(
+                                    "w-10 h-10 rounded-full font-semibold",
+                                    getScore(player, hole)
+                                      ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                      : "bg-gray-100 text-gray-500 hover:bg-gray-200",
+                                  )}
+                                >
+                                  {getScore(player, hole) || "–"}
+                                </Button>
+                              </Link>
+                            </td>
+                          ))}
+                        </tr>
                       ))}
-                    </tr>
-                  )) : PLAYERS.map((player) => (
-                    <tr key={player} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
-                        {player}
-                      </td>
-                      {holes.map((hole) => (
-                        <td key={hole} className="p-3 text-center">
-                          <Link to={`/hole/${encodeURIComponent(roundName)}/${hole}`}>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={cn(
-                                "w-10 h-10 rounded-full font-semibold",
-                                getScore(player, hole)
-                                  ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                              )}
-                            >
-                              {getScore(player, hole) || '–'}
-                            </Button>
-                          </Link>
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
                 </tbody>
               </table>
             </div>

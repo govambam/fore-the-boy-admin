@@ -39,26 +39,35 @@ export function Home({ onLogout }: HomeProps) {
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">Select Round</h2>
-        
+        <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
+          Select Round
+        </h2>
+
         {ROUNDS.map((round, index) => (
-          <Card key={round.name} className="hover:shadow-lg transition-shadow border-2 hover:border-green-200">
+          <Card
+            key={round.name}
+            className="hover:shadow-lg transition-shadow border-2 hover:border-green-200"
+          >
             <CardContent className="p-6">
               <Link to={`/scorecard/${encodeURIComponent(round.name)}`}>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="w-full h-auto p-0 hover:bg-transparent"
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full">
-                        <span className="text-green-700 font-bold text-lg">{index + 1}</span>
+                        <span className="text-green-700 font-bold text-lg">
+                          {index + 1}
+                        </span>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-lg text-gray-900">{round.name}</h3>
+                        <h3 className="font-semibold text-lg text-gray-900">
+                          {round.name}
+                        </h3>
                         <p className="text-gray-600 text-sm">
                           {round.holes} holes
-                          {round.name === 'Quicksands' && (
+                          {round.name === "Quicksands" && (
                             <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
                               Team Scramble
                             </span>
@@ -67,7 +76,7 @@ export function Home({ onLogout }: HomeProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {round.name !== 'Quicksands' && (
+                      {round.name !== "Quicksands" && (
                         <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                           <Trophy className="h-3 w-3" />
                           <span>Contests</span>

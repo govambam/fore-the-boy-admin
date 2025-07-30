@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Trophy, AlertCircle } from "lucide-react";
 
 interface LoginProps {
@@ -37,8 +42,8 @@ export function Login({ onLogin }: LoginProps) {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 bg-green-600 rounded-full">
-            <Trophy className="h-8 w-8 text-white" />
-          </div>
+              <Trophy className="h-8 w-8 text-white" />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900">Fore the Boy</h1>
           </div>
           <p className="text-gray-600 text-lg">Score Entry System</p>
@@ -48,7 +53,9 @@ export function Login({ onLogin }: LoginProps) {
         {/* Login Form */}
         <Card className="border-2 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-center text-xl">Enter Password</CardTitle>
+            <CardTitle className="text-center text-xl">
+              Enter Password
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,9 +76,9 @@ export function Login({ onLogin }: LoginProps) {
                   </div>
                 )}
               </div>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 className="w-full py-3 text-lg"
                 disabled={isLoading || !password.trim()}
               >
