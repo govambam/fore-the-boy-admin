@@ -17,16 +17,26 @@ export function HoleEdit() {
     Jack: '-',
     Marshall: '-'
   });
+  const [teamScores, setTeamScores] = useState<Record<string, string>>({
+    'Team 1': '-',
+    'Team 2': '-'
+  });
   const [contestWinner, setContestWinner] = useState<string>('-');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const roundName = decodeURIComponent(round || '') as Round;
   const holeNumber = parseInt(hole || '0');
-  
+
   const contestHoles = CONTEST_HOLES[roundName];
   const hasContest = contestHoles.longDrive.includes(holeNumber) || contestHoles.closestToPin.includes(holeNumber);
   const contestType = contestHoles.longDrive.includes(holeNumber) ? '🏌 Long Drive' : '🎯 Closest to the Pin';
+
+  const isQuicksands = roundName === 'Quicksands';
+  const teams = [
+    { name: 'Team 1', players: 'Ivan + Jack', lead: 'Ivan' as Player },
+    { name: 'Team 2', players: 'Patrick + Marshall', lead: 'Patrick' as Player }
+  ];
 
   useEffect(() => {
     loadHoleData();
