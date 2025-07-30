@@ -29,17 +29,25 @@ export function Scorecard() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Load scores
-      const { data: scoresData } = await supabase
+      // Load scores with timeout
+      const { data: scoresData, error: scoresError } = await supabase
         .from('scores')
         .select('*')
         .eq('round', roundName);
 
-      // Load contests
-      const { data: contestsData } = await supabase
+      if (scoresError) {
+        console.error('Error loading scores:', scoresError);
+      }
+
+      // Load contests with timeout
+      const { data: contestsData, error: contestsError } = await supabase
         .from('contests')
         .select('*')
         .eq('round', roundName);
+
+      if (contestsError) {
+        console.error('Error loading contests:', contestsError);
+      }
 
       // Process scores
       const scoresMap: Record<string, number> = {};
@@ -58,6 +66,7 @@ export function Scorecard() {
       setContests(contestsMap);
     } catch (error) {
       console.error('Error loading data:', error);
+      // Continue loading the UI even if database connection fails
     } finally {
       setLoading(false);
     }
