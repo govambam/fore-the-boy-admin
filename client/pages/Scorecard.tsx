@@ -138,27 +138,54 @@ export function Scorecard() {
               )}
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="grid grid-cols-2 gap-3">
-                {PLAYERS.map((player) => (
-                  <Link
-                    key={player}
-                    to={`/hole/${encodeURIComponent(roundName)}/${hole}`}
-                    className="block"
-                  >
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <span className="font-medium text-sm">{player}</span>
-                      <div className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
-                        getScore(player, hole) 
-                          ? "bg-blue-100 text-blue-700" 
-                          : "bg-gray-200 text-gray-500"
-                      )}>
-                        {getScore(player, hole) || '–'}
+              {isQuicksands ? (
+                <div className="space-y-3">
+                  {teams.map((team) => (
+                    <Link
+                      key={team.name}
+                      to={`/hole/${encodeURIComponent(roundName)}/${hole}`}
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div>
+                          <span className="font-medium text-sm block">{team.name}</span>
+                          <span className="text-xs text-gray-600">{team.players}</span>
+                        </div>
+                        <div className={cn(
+                          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
+                          getTeamScore(team.lead, hole)
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-200 text-gray-500"
+                        )}>
+                          {getTeamScore(team.lead, hole) || '–'}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {PLAYERS.map((player) => (
+                    <Link
+                      key={player}
+                      to={`/hole/${encodeURIComponent(roundName)}/${hole}`}
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <span className="font-medium text-sm">{player}</span>
+                        <div className={cn(
+                          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold",
+                          getScore(player, hole)
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-200 text-gray-500"
+                        )}>
+                          {getScore(player, hole) || '–'}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
