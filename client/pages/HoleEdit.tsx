@@ -62,10 +62,23 @@ export function HoleEdit() {
 
       // Populate scores
       const newScores = { ...scores };
+      const newTeamScores = { ...teamScores };
+
       scoresData?.forEach((score) => {
-        newScores[score.player_name as Player] = score.strokes.toString();
+        if (isQuicksands) {
+          // For Quicksands, map player names to team scores
+          if (score.player_name === 'Ivan') {
+            newTeamScores['Team 1'] = score.strokes.toString();
+          } else if (score.player_name === 'Patrick') {
+            newTeamScores['Team 2'] = score.strokes.toString();
+          }
+        } else {
+          newScores[score.player_name as Player] = score.strokes.toString();
+        }
       });
+
       setScores(newScores);
+      setTeamScores(newTeamScores);
 
       // Populate contest winner
       if (contestData) {
