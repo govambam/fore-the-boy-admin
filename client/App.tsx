@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Scorecard } from "./pages/Scorecard";
 import { HoleEdit } from "./pages/HoleEdit";
-import { NotFound } from "./pages/NotFound";
+import NotFound from "./pages/NotFound";
 import { Toaster } from "sonner";
 import "./global.css";
 
