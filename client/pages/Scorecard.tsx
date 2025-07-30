@@ -68,6 +68,17 @@ export function Scorecard() {
     return scores[key] || null;
   };
 
+  const getTeamScore = (teamLead: Player, hole: number) => {
+    const key = `${teamLead}-${hole}`;
+    return scores[key] || null;
+  };
+
+  const isQuicksands = roundName === 'Quicksands';
+  const teams = [
+    { name: 'Team 1', players: 'Ivan + Jack', lead: 'Ivan' as Player },
+    { name: 'Team 2', players: 'Patrick + Marshall', lead: 'Patrick' as Player }
+  ];
+
   const hasContest = (hole: number) => {
     return contestHoles.longDrive.includes(hole) || contestHoles.closestToPin.includes(hole);
   };
