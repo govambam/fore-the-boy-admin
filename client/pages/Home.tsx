@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ROUNDS } from "../lib/supabase";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Users, Trophy, Target, LogOut } from "lucide-react";
+import { Users, Trophy, LogOut } from "lucide-react";
 
 interface HomeProps {
   onLogout: () => void;
