@@ -208,13 +208,36 @@ export function HoleEdit() {
       </div>
 
       <div className="space-y-6">
-        {/* Player Scores */}
+        {/* Scores */}
         <Card>
           <CardHeader>
-            <CardTitle>Player Scores</CardTitle>
+            <CardTitle>{isQuicksands ? 'Team Scores' : 'Player Scores'}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {PLAYERS.map((player) => (
+            {isQuicksands ? teams.map((team) => (
+              <div key={team.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div>
+                  <label className="font-medium text-gray-900 block">{team.name}</label>
+                  <span className="text-sm text-gray-600">{team.players}</span>
+                </div>
+                <Select
+                  value={teamScores[team.name]}
+                  onValueChange={(value) => handleTeamScoreChange(team.name, value)}
+                >
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="-">–</SelectItem>
+                    {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )) : PLAYERS.map((player) => (
               <div key={player} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <label className="font-medium text-gray-900">{player}</label>
                 <Select
