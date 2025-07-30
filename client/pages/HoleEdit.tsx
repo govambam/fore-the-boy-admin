@@ -116,15 +116,33 @@ export function HoleEdit() {
         .eq('round', roundName)
         .eq('hole_number', holeNumber);
 
-      // Insert new scores (only non-"-" values)
-      const scoresToInsert = PLAYERS
-        .filter(player => scores[player] !== '-' && scores[player] !== '')
-        .map(player => ({
-          player_name: player,
-          round: roundName,
-          hole_number: holeNumber,
-          strokes: parseInt(scores[player])
-        }));
+      // Insert new scores
+      let scoresToInsert = [];
+
+      if (isQuicksands) {
+        // For Quicksands, save team scores using team lead players
+        teams.forEach((team) => {
+          const teamScore = teamScores[team.name];
+          if (teamScore !== '-' && teamScore !== '') {
+            scoresToInsert.push({
+              player_name: team.lead,
+              round: roundName,
+              hole_number: holeNumber,
+              strokes: parseInt(teamScore)
+            });
+          }
+        });
+      } else {
+        // For other rounds, save individual player scores
+        scoresToInsert = PLAYERS
+          .filter(player => scores[player] !== '-' && scores[player] !== '')
+          .map(player => ({
+            player_name: player,
+            round: roundName,
+            hole_number: holeNumber,
+            strokes: parseInt(scores[player])
+          }));
+      }
 
       if (scoresToInsert.length > 0) {
         const { error: scoresError } = await supabase
