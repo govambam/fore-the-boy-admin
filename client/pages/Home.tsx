@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import { ROUNDS } from "../lib/supabase";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Users, Trophy, Target } from "lucide-react";
+import { Users, Trophy, Target, LogOut } from "lucide-react";
 
-export function Home() {
+interface HomeProps {
+  onLogout: () => void;
+}
+
+export function Home({ onLogout }: HomeProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       <div className="text-center mb-8">
