@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ROUNDS } from "../lib/supabase";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Golf, Users, Trophy } from "lucide-react";
+import { Users, Trophy, Target } from "lucide-react";
 
 export function Home() {
   return (
