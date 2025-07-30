@@ -200,7 +200,7 @@ export function Scorecard() {
                 <thead>
                   <tr className="border-b-2 bg-gray-50">
                     <th className="p-4 text-left font-semibold text-gray-900 sticky left-0 bg-gray-50 z-10">
-                      Player
+                      {isQuicksands ? 'Team' : 'Player'}
                     </th>
                     {holes.map((hole) => (
                       <th key={hole} className="p-3 text-center min-w-[60px]">
@@ -223,7 +223,34 @@ export function Scorecard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {PLAYERS.map((player) => (
+                  {isQuicksands ? teams.map((team) => (
+                    <tr key={team.name} className="border-b hover:bg-gray-50">
+                      <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
+                        <div>
+                          <div className="font-semibold">{team.name}</div>
+                          <div className="text-sm text-gray-600">{team.players}</div>
+                        </div>
+                      </td>
+                      {holes.map((hole) => (
+                        <td key={hole} className="p-3 text-center">
+                          <Link to={`/hole/${encodeURIComponent(roundName)}/${hole}`}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className={cn(
+                                "w-10 h-10 rounded-full font-semibold",
+                                getTeamScore(team.lead, hole)
+                                  ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                              )}
+                            >
+                              {getTeamScore(team.lead, hole) || '–'}
+                            </Button>
+                          </Link>
+                        </td>
+                      ))}
+                    </tr>
+                  )) : PLAYERS.map((player) => (
                     <tr key={player} className="border-b hover:bg-gray-50">
                       <td className="p-4 font-medium text-gray-900 sticky left-0 bg-white">
                         {player}
