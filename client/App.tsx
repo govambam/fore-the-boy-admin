@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import { Scorecard } from "./pages/Scorecard";
 import { HoleEdit } from "./pages/HoleEdit";
 import { NotFound } from "./pages/NotFound";
+import { Toaster } from "sonner";
 import "./global.css";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/hole/:round/:hole" element={<HoleEdit />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Toaster />
       </div>
     </BrowserRouter>
   );
