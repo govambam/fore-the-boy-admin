@@ -148,12 +148,17 @@ export function HoleEdit() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      console.log("Starting save for hole", holeNumber, "in round", roundName);
+      console.log("Current scores:", isQuicksands ? teamScores : scores);
+
       // Delete existing scores for this hole
-      await supabase
+      const deleteResult = await supabase
         .from("scores")
         .delete()
         .eq("round", roundName)
         .eq("hole_number", holeNumber);
+
+      console.log("Delete scores result:", deleteResult);
 
       // Delete existing contest for this hole
       await supabase
