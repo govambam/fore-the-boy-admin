@@ -331,7 +331,8 @@ export function HoleEdit() {
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
       console.error("Error clearing hole data:", error);
-      toast.error("Failed to clear hole data");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to clear hole data: ${errorMessage}`);
     } finally {
       setClearing(false);
     }
