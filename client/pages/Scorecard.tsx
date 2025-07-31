@@ -20,7 +20,7 @@ import {
 } from "../components/ui/card";
 import { ArrowLeft, Trophy, Target } from "lucide-react";
 import { cn } from "../lib/utils";
-import { DarkModeToggle } from "../components/DarkModeToggle";
+
 import { ContestType } from "../components/SafeEmoji";
 
 export function Scorecard() {
