@@ -4,7 +4,6 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Users, Trophy, LogOut } from "lucide-react";
 
-
 interface HomeProps {
   onLogout: () => void;
 }

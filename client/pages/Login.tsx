@@ -9,7 +9,6 @@ import {
 } from "../components/ui/card";
 import { Trophy, AlertCircle } from "lucide-react";
 
-
 interface LoginProps {
   onLogin: (password: string) => Promise<{ success: boolean; error?: string }>;
 }
