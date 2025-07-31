@@ -92,7 +92,16 @@ export function Home({ onLogout }: HomeProps) {
         ))}
       </div>
 
-      <div className="mt-12 text-center">
+      <div className="mt-12 text-center space-y-3">
+        <a
+          href="https://www.foretheboy.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm transition-colors"
+        >
+          <Trophy className="h-4 w-4" />
+          View the Leaderboard
+        </a>
         <p className="text-xs text-gray-400">Admin Score Entry System</p>
       </div>
     </div>
