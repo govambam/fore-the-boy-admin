@@ -163,9 +163,17 @@ export function HoleEdit() {
       console.log("Starting save for hole", holeNumber, "in round", roundName);
       console.log("Current scores:", isQuicksands ? teamScores : scores);
 
-      // Use upsert for scores (INSERT ... ON CONFLICT UPDATE)
-      let scoresToUpsert = [];
-      let scoresToDelete = [];
+      // Delete existing scores for this hole first, then insert new ones
+      const deleteResult = await supabase
+        .from("scores")
+        .delete()
+        .eq("round", roundName)
+        .eq("hole_number", holeNumber);
+
+      console.log("Delete scores result:", deleteResult);
+
+      // Prepare scores to insert (scores set to "-" are effectively deleted since we don't insert them)
+      let scoresToInsert = [];
       let deletedScores = 0;
 
       if (isQuicksands) {
@@ -173,18 +181,13 @@ export function HoleEdit() {
         teams.forEach((team) => {
           const teamScore = teamScores[team.name];
           if (teamScore !== "-" && teamScore !== "") {
-            scoresToUpsert.push({
+            scoresToInsert.push({
               player_name: team.lead,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(teamScore),
             });
           } else if (teamScore === "-") {
-            scoresToDelete.push({
-              player_name: team.lead,
-              round: roundName,
-              hole_number: holeNumber,
-            });
             deletedScores++;
           }
         });
@@ -193,52 +196,32 @@ export function HoleEdit() {
         PLAYERS.forEach((player) => {
           const playerScore = scores[player];
           if (playerScore !== "-" && playerScore !== "") {
-            scoresToUpsert.push({
+            scoresToInsert.push({
               player_name: player,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(playerScore),
             });
           } else if (playerScore === "-") {
-            scoresToDelete.push({
-              player_name: player,
-              round: roundName,
-              hole_number: holeNumber,
-            });
             deletedScores++;
           }
         });
       }
 
-      console.log("Scores to upsert:", scoresToUpsert);
-      console.log("Scores to delete:", scoresToDelete);
+      console.log("Scores to insert:", scoresToInsert);
       console.log("Deleted scores count:", deletedScores);
 
-      // Delete scores marked for deletion
-      for (const scoreToDelete of scoresToDelete) {
-        await supabase
+      // Insert new scores
+      if (scoresToInsert.length > 0) {
+        const insertResult = await supabase
           .from("scores")
-          .delete()
-          .eq("player_name", scoreToDelete.player_name)
-          .eq("round", scoreToDelete.round)
-          .eq("hole_number", scoreToDelete.hole_number);
-      }
+          .insert(scoresToInsert);
 
-      // Upsert scores that have values
-      if (scoresToUpsert.length > 0) {
-        const upsertResult = await supabase
-          .from("scores")
-          .upsert(scoresToUpsert, {
-            onConflict: "player_name,round,hole_number",
-            ignoreDuplicates: false,
-          });
+        console.log("Insert scores result:", insertResult);
 
-        console.log("Upsert scores result:", upsertResult);
-
-        if (upsertResult.error) {
-          console.error("Upsert error details:", JSON.stringify(upsertResult.error, null, 2));
-          console.error("Full upsert result:", JSON.stringify(upsertResult, null, 2));
-          throw upsertResult.error;
+        if (insertResult.error) {
+          console.error("Insert error details:", JSON.stringify(insertResult.error, null, 2));
+          throw insertResult.error;
         }
       }
 
