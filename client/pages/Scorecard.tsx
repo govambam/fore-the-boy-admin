@@ -133,6 +133,10 @@ export function Scorecard() {
     return contests[hole] || null;
   };
 
+  const getPar = (hole: number) => {
+    return PAR_SCORES[roundName]?.[hole] || 3;
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
