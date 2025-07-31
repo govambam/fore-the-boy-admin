@@ -55,10 +55,10 @@ export function HoleEdit() {
 
   const isQuicksands = roundName === "Quicksands";
   const teams = [
-    { name: "Team 1", players: "Ivan + Jack", lead: "Ivan" as Player },
+    { name: "Team 1", players: "IG + JC", lead: "Ivan" as Player },
     {
       name: "Team 2",
-      players: "Patrick + Marshall",
+      players: "PT + MR",
       lead: "Patrick" as Player,
     },
   ];
