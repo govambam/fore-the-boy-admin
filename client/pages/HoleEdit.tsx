@@ -260,12 +260,7 @@ export function HoleEdit() {
             );
 
           if (contestError) {
-            console.error("Contest upsert error details:", {
-              message: contestError.message,
-              details: contestError.details,
-              hint: contestError.hint,
-              code: contestError.code
-            });
+            console.error("Contest upsert error details:", JSON.stringify(contestError, null, 2));
             throw contestError;
           }
         } else {
