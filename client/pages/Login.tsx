@@ -10,7 +10,7 @@ import {
 import { Trophy, AlertCircle } from "lucide-react";
 
 interface LoginProps {
-  onLogin: () => void;
+  onLogin: (password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 export function Login({ onLogin }: LoginProps) {
@@ -18,21 +18,24 @@ export function Login({ onLogin }: LoginProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // Simulate a brief loading state for better UX
-    setTimeout(() => {
-      if (password === "Trigga") {
-        onLogin();
-      } else {
-        setError("Incorrect password. Please try again.");
+    try {
+      const result = await onLogin(password);
+
+      if (!result.success) {
+        setError(result.error || "Login failed. Please try again.");
         setPassword("");
       }
+    } catch (err) {
+      setError("Login failed. Please try again.");
+      setPassword("");
+    } finally {
       setIsLoading(false);
-    }, 300);
+    }
   };
 
   return (
