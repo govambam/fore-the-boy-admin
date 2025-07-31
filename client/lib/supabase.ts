@@ -12,6 +12,7 @@ export interface Score {
   round: string;
   hole_number: number;
   strokes: number;
+  unique_hole_id: string;
 }
 
 export interface Contest {
