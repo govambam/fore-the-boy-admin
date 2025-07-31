@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { Toaster } from "sonner";
 import { supabase } from "./lib/supabase";
 import { DarkModeProvider } from "./hooks/use-dark-mode";
+import { DarkModeToggle } from "./components/DarkModeToggle";
 import "./global.css";
 
 function App() {
