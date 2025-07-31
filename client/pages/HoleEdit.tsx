@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { ArrowLeft, Save, X, Trash2 } from "lucide-react";
-import { DarkModeToggle } from "../components/DarkModeToggle";
+
 import { ContestType } from "../components/SafeEmoji";
 import { toast } from "sonner";
 import {
