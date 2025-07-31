@@ -8,6 +8,7 @@ import { HoleEdit } from "./pages/HoleEdit";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "sonner";
 import { supabase } from "./lib/supabase";
+import { DarkModeProvider } from "./hooks/use-dark-mode";
 import "./global.css";
 
 function App() {
@@ -83,55 +84,63 @@ function App() {
   // Show loading screen while checking session
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-green-600 rounded-full">
-              <svg
-                className="h-8 w-8 text-white animate-pulse"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M5 4h14v2H5V4zm0 4h14v2H5V8zm0 4h14v2H5v-2zm0 4h14v2H5v-2z" />
-              </svg>
+      <DarkModeProvider>
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center transition-colors">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 bg-green-600 dark:bg-green-500 rounded-full">
+                <svg
+                  className="h-8 w-8 text-white animate-pulse"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M5 4h14v2H5V4zm0 4h14v2H5V8zm0 4h14v2H5v-2zm0 4h14v2H5v-2z" />
+                </svg>
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Fore the Boy</h1>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Fore the Boy</h1>
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full animate-bounce"></div>
+              <div
+                className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">Loading tournament...</p>
           </div>
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce"></div>
-            <div
-              className="w-2 h-2 bg-green-600 rounded-full animate-bounce"
-              style={{ animationDelay: "0.1s" }}
-            ></div>
-            <div
-              className="w-2 h-2 bg-green-600 rounded-full animate-bounce"
-              style={{ animationDelay: "0.2s" }}
-            ></div>
-          </div>
-          <p className="text-gray-600 mt-2">Loading tournament...</p>
         </div>
-      </div>
+      </DarkModeProvider>
     );
   }
 
   // Show login screen if not authenticated
   if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
+    return (
+      <DarkModeProvider>
+        <Login onLogin={handleLogin} />
+      </DarkModeProvider>
+    );
   }
 
   // Show main app if authenticated
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-        <Routes>
-          <Route path="/" element={<Home onLogout={handleLogout} />} />
-          <Route path="/scorecard/:round" element={<Scorecard />} />
-          <Route path="/hole/:round/:hole" element={<HoleEdit />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster />
-      </div>
-    </BrowserRouter>
+    <DarkModeProvider>
+      <BrowserRouter>
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
+          <Routes>
+            <Route path="/" element={<Home onLogout={handleLogout} />} />
+            <Route path="/scorecard/:round" element={<Scorecard />} />
+            <Route path="/hole/:round/:hole" element={<HoleEdit />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster theme="system" />
+        </div>
+      </BrowserRouter>
+    </DarkModeProvider>
   );
 }
 
