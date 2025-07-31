@@ -97,10 +97,19 @@ export function HoleEdit() {
         .eq("hole_number", holeNumber)
         .single();
 
-      // Populate scores
-      const newScores = { ...scores };
-      const newTeamScores = { ...teamScores };
+      // Start with fresh state - all scores set to "-"
+      const newScores: Record<Player, string> = {
+        Ivan: "-",
+        Patrick: "-",
+        Jack: "-",
+        Marshall: "-",
+      };
+      const newTeamScores: Record<string, string> = {
+        "Team 1": "-",
+        "Team 2": "-",
+      };
 
+      // Only populate scores that exist in the database
       scoresData?.forEach((score) => {
         if (isQuicksands) {
           // For Quicksands, map player names to team scores
