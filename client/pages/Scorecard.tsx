@@ -167,7 +167,12 @@ export function Scorecard() {
           <Card key={hole} className="border-2">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Hole {hole}</CardTitle>
+                <div className="flex items-center gap-3">
+                  <CardTitle className="text-lg">Hole {hole}</CardTitle>
+                  <div className="flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                    <span>Par {getPar(hole)}</span>
+                  </div>
+                </div>
                 {hasContest(hole) && (
                   <div className="flex items-center gap-1 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
                     <Trophy className="h-3 w-3" />
