@@ -5,6 +5,7 @@ import {
   PLAYERS,
   ROUNDS,
   CONTEST_HOLES,
+  PAR_SCORES,
   Score,
   Contest,
   Round,
