@@ -22,8 +22,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import { ArrowLeft, Save, X } from "lucide-react";
+import { ArrowLeft, Save, X, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../components/ui/alert-dialog";
 
 export function HoleEdit() {
   const { round, hole } = useParams<{ round: string; hole: string }>();
@@ -42,6 +53,7 @@ export function HoleEdit() {
   const [contestWinner, setContestWinner] = useState<string>("-");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [clearing, setClearing] = useState(false);
 
   const roundName = decodeURIComponent(round || "") as Round;
   const holeNumber = parseInt(hole || "0");
@@ -151,24 +163,9 @@ export function HoleEdit() {
       console.log("Starting save for hole", holeNumber, "in round", roundName);
       console.log("Current scores:", isQuicksands ? teamScores : scores);
 
-      // Delete existing scores for this hole
-      const deleteResult = await supabase
-        .from("scores")
-        .delete()
-        .eq("round", roundName)
-        .eq("hole_number", holeNumber);
-
-      console.log("Delete scores result:", deleteResult);
-
-      // Delete existing contest for this hole
-      await supabase
-        .from("contests")
-        .delete()
-        .eq("round", roundName)
-        .eq("hole_number", holeNumber);
-
-      // Insert new scores (scores set to "-" are effectively deleted since we don't insert them)
-      let scoresToInsert = [];
+      // Use upsert for scores (INSERT ... ON CONFLICT UPDATE)
+      let scoresToUpsert = [];
+      let scoresToDelete = [];
       let deletedScores = 0;
 
       if (isQuicksands) {
@@ -176,13 +173,18 @@ export function HoleEdit() {
         teams.forEach((team) => {
           const teamScore = teamScores[team.name];
           if (teamScore !== "-" && teamScore !== "") {
-            scoresToInsert.push({
+            scoresToUpsert.push({
               player_name: team.lead,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(teamScore),
             });
           } else if (teamScore === "-") {
+            scoresToDelete.push({
+              player_name: team.lead,
+              round: roundName,
+              hole_number: holeNumber,
+            });
             deletedScores++;
           }
         });
@@ -191,50 +193,84 @@ export function HoleEdit() {
         PLAYERS.forEach((player) => {
           const playerScore = scores[player];
           if (playerScore !== "-" && playerScore !== "") {
-            scoresToInsert.push({
+            scoresToUpsert.push({
               player_name: player,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(playerScore),
             });
           } else if (playerScore === "-") {
+            scoresToDelete.push({
+              player_name: player,
+              round: roundName,
+              hole_number: holeNumber,
+            });
             deletedScores++;
           }
         });
       }
 
-      console.log("Scores to insert:", scoresToInsert);
+      console.log("Scores to upsert:", scoresToUpsert);
+      console.log("Scores to delete:", scoresToDelete);
       console.log("Deleted scores count:", deletedScores);
 
-      if (scoresToInsert.length > 0) {
-        const insertResult = await supabase
+      // Delete scores marked for deletion
+      for (const scoreToDelete of scoresToDelete) {
+        await supabase
           .from("scores")
-          .insert(scoresToInsert);
-
-        console.log("Insert scores result:", insertResult);
-
-        if (insertResult.error) throw insertResult.error;
+          .delete()
+          .eq("player_name", scoreToDelete.player_name)
+          .eq("round", scoreToDelete.round)
+          .eq("hole_number", scoreToDelete.hole_number);
       }
 
-      // Insert contest winner (only if not "-")
-      if (hasContest && contestWinner !== "-" && contestWinner !== "") {
-        const { error: contestError } = await supabase.from("contests").insert({
-          round: roundName,
-          hole_number: holeNumber,
-          winner_name: contestWinner,
-        });
+      // Upsert scores that have values
+      if (scoresToUpsert.length > 0) {
+        const upsertResult = await supabase
+          .from("scores")
+          .upsert(scoresToUpsert, {
+            onConflict: "player_name,round,hole_number",
+            ignoreDuplicates: false
+          });
 
-        if (contestError) throw contestError;
+        console.log("Upsert scores result:", upsertResult);
+
+        if (upsertResult.error) throw upsertResult.error;
+      }
+
+      // Handle contest winner (upsert or delete)
+      if (hasContest) {
+        if (contestWinner !== "-" && contestWinner !== "") {
+          const { error: contestError } = await supabase
+            .from("contests")
+            .upsert({
+              round: roundName,
+              hole_number: holeNumber,
+              winner_name: contestWinner,
+            }, {
+              onConflict: "round,hole_number",
+              ignoreDuplicates: false
+            });
+
+          if (contestError) throw contestError;
+        } else {
+          // Delete contest if winner is set to "-"
+          await supabase
+            .from("contests")
+            .delete()
+            .eq("round", roundName)
+            .eq("hole_number", holeNumber);
+        }
       }
 
       // Provide feedback about what was saved/deleted
       let message = "Hole data saved successfully!";
-      if (deletedScores > 0 && scoresToInsert.length > 0) {
-        message = `Saved ${scoresToInsert.length} scores and removed ${deletedScores} scores.`;
+      if (deletedScores > 0 && scoresToUpsert.length > 0) {
+        message = `Saved ${scoresToUpsert.length} scores and removed ${deletedScores} scores.`;
       } else if (deletedScores > 0) {
         message = `Removed ${deletedScores} scores from hole ${holeNumber}.`;
-      } else if (scoresToInsert.length > 0) {
-        message = `Saved ${scoresToInsert.length} scores for hole ${holeNumber}.`;
+      } else if (scoresToUpsert.length > 0) {
+        message = `Saved ${scoresToUpsert.length} scores for hole ${holeNumber}.`;
       }
 
       toast.success(message);
@@ -249,6 +285,52 @@ export function HoleEdit() {
 
   const handleCancel = () => {
     navigate(`/scorecard/${encodeURIComponent(roundName)}`);
+  };
+
+  const handleClear = async () => {
+    setClearing(true);
+    try {
+      console.log("Starting clear for hole", holeNumber, "in round", roundName);
+
+      // Delete all scores for this hole
+      const deleteScoresResult = await supabase
+        .from("scores")
+        .delete()
+        .eq("round", roundName)
+        .eq("hole_number", holeNumber);
+
+      console.log("Delete scores result:", deleteScoresResult);
+
+      // Delete contest for this hole
+      const deleteContestResult = await supabase
+        .from("contests")
+        .delete()
+        .eq("round", roundName)
+        .eq("hole_number", holeNumber);
+
+      console.log("Delete contest result:", deleteContestResult);
+
+      // Reset local state
+      setScores({
+        Ivan: "-",
+        Patrick: "-",
+        Jack: "-",
+        Marshall: "-",
+      });
+      setTeamScores({
+        "Team 1": "-",
+        "Team 2": "-",
+      });
+      setContestWinner("-");
+
+      toast.success(`Cleared all data for hole ${holeNumber}`);
+      navigate(`/scorecard/${encodeURIComponent(roundName)}`);
+    } catch (error) {
+      console.error("Error clearing hole data:", error);
+      toast.error("Failed to clear hole data");
+    } finally {
+      setClearing(false);
+    }
   };
 
   if (loading) {
@@ -395,15 +477,46 @@ export function HoleEdit() {
         <div className="flex gap-3 pt-4">
           <Button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || clearing}
             className="flex-1 gap-2"
           >
             <Save className="h-4 w-4" />
             {saving ? "Saving..." : "Save"}
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                disabled={saving || clearing}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                {clearing ? "Clearing..." : "Clear"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear Hole Data</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete all scores and contest data for Hole {holeNumber} in {roundName}. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleClear}
+                  className="bg-red-600 hover:bg-red-700"
+                  disabled={clearing}
+                >
+                  {clearing ? "Clearing..." : "Clear All Data"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             variant="outline"
             onClick={handleCancel}
+            disabled={saving || clearing}
             className="flex-1 gap-2"
           >
             <X className="h-4 w-4" />
