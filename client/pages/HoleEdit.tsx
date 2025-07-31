@@ -286,8 +286,23 @@ export function HoleEdit() {
       toast.success(message);
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
-      console.error("Error saving hole data:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error("Error saving hole data:", JSON.stringify(error, null, 2));
+      console.error("Error type:", typeof error);
+      console.error("Error constructor:", error?.constructor?.name);
+
+      let errorMessage = "Unknown error";
+      if (error && typeof error === 'object') {
+        if ('message' in error) {
+          errorMessage = error.message;
+        } else if ('error' in error) {
+          errorMessage = error.error;
+        } else {
+          errorMessage = JSON.stringify(error);
+        }
+      } else {
+        errorMessage = String(error);
+      }
+
       toast.error(`Failed to save hole data: ${errorMessage}`);
     } finally {
       setSaving(false);
