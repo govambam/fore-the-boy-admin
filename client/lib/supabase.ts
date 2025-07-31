@@ -50,3 +50,19 @@ export const ROUNDS: { name: Round; holes: number }[] = [
   { name: "Gamble Sands", holes: 18 },
   { name: "Quicksands", holes: 14 },
 ];
+
+// Par scores for each course
+export const PAR_SCORES: Record<Round, Record<number, number>> = {
+  "Gamble Sands": {
+    1: 4, 2: 4, 3: 5, 4: 3, 5: 4, 6: 3, 7: 5, 8: 4, 9: 4,
+    10: 3, 11: 4, 12: 4, 13: 5, 14: 4, 15: 4, 16: 3, 17: 4, 18: 5
+  },
+  "Scarecrow": {
+    1: 4, 2: 3, 3: 5, 4: 3, 5: 4, 6: 5, 7: 4, 8: 4, 9: 3,
+    10: 4, 11: 3, 12: 5, 13: 4, 14: 4, 15: 5, 16: 3, 17: 4, 18: 4
+  },
+  "Quicksands": {
+    1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3, 7: 3,
+    8: 3, 9: 3, 10: 3, 11: 3, 12: 3, 13: 3, 14: 3
+  }
+};
