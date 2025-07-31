@@ -15,12 +15,8 @@ function App() {
 
   // Check for existing authentication on app load
   useEffect(() => {
-    // Check if we should force logout (for testing)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('logout') === 'true') {
-      localStorage.removeItem("golfTournamentAuth");
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    // Clear any existing authentication to force login screen
+    localStorage.removeItem("golfTournamentAuth");
 
     const authStatus = localStorage.getItem("golfTournamentAuth");
     console.log("Auth status from localStorage:", authStatus); // Debug log
