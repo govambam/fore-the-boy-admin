@@ -513,15 +513,6 @@ export function HoleEdit() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Button
-            variant="outline"
-            onClick={handleCancel}
-            disabled={saving || clearing}
-            className="flex-1 gap-2"
-          >
-            <X className="h-4 w-4" />
-            Cancel
-          </Button>
         </div>
       </div>
     </div>
