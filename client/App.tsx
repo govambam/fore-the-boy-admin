@@ -97,7 +97,9 @@ function App() {
                   <path d="M5 4h14v2H5V4zm0 4h14v2H5V8zm0 4h14v2H5v-2zm0 4h14v2H5v-2z" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Fore the Boy</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                Fore the Boy
+              </h1>
             </div>
             <div className="flex items-center justify-center gap-2">
               <div className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full animate-bounce"></div>
@@ -110,7 +112,9 @@ function App() {
                 style={{ animationDelay: "0.2s" }}
               ></div>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 mt-2">Loading tournament...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">
+              Loading tournament...
+            </p>
           </div>
         </div>
       </DarkModeProvider>

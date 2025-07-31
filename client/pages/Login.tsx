@@ -56,10 +56,16 @@ export function Login({ onLogin }: LoginProps) {
                 className="h-12 w-12 object-contain"
               />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Fore the Boy</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+              Fore the Boy
+            </h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">Score Entry System</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Admin Access Required</p>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
+            Score Entry System
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            Admin Access Required
+          </p>
         </div>
 
         {/* Login Form */}
@@ -101,7 +107,9 @@ export function Login({ onLogin }: LoginProps) {
         </Card>
 
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-400 dark:text-gray-500">Secure Admin Login</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            Secure Admin Login
+          </p>
         </div>
       </div>
     </div>

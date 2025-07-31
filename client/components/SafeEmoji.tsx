@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
-import { getSafeEmoji, EmojiWithFallback, GOLF_EMOJIS } from '../lib/emoji-utils';
+import { useEffect, useState } from "react";
+import {
+  getSafeEmoji,
+  EmojiWithFallback,
+  GOLF_EMOJIS,
+} from "../lib/emoji-utils";
 
 interface SafeEmojiProps {
   emoji: EmojiWithFallback;
   className?: string;
-  fallbackMode?: 'emoji' | 'text' | 'hidden';
+  fallbackMode?: "emoji" | "text" | "hidden";
 }
 
 /**
  * SafeEmoji Component
  * Renders emojis with automatic fallback handling for better cross-device compatibility
  */
-export function SafeEmoji({ 
-  emoji, 
-  className = '', 
-  fallbackMode = 'emoji' 
+export function SafeEmoji({
+  emoji,
+  className = "",
+  fallbackMode = "emoji",
 }: SafeEmojiProps) {
-  const [safeEmoji, setSafeEmoji] = useState<string>('');
+  const [safeEmoji, setSafeEmoji] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -38,9 +42,9 @@ export function SafeEmoji({
   // If we have a safe emoji, render it
   if (safeEmoji) {
     return (
-      <span 
+      <span
         className={`emoji-safe ${className}`}
-        role="img" 
+        role="img"
         aria-label={emoji.description}
         title={emoji.description}
       >
@@ -51,21 +55,21 @@ export function SafeEmoji({
 
   // Fallback modes when no emoji is available
   switch (fallbackMode) {
-    case 'text':
+    case "text":
       return (
         <span className={className} title={emoji.description}>
           [{emoji.description}]
         </span>
       );
-    case 'hidden':
+    case "hidden":
       return null;
-    case 'emoji':
+    case "emoji":
     default:
       // Last resort: try to render the original emoji anyway
       return (
-        <span 
+        <span
           className={`emoji-fallback ${className}`}
-          role="img" 
+          role="img"
           aria-label={emoji.description}
           title={emoji.description}
         >
@@ -79,33 +83,35 @@ export function SafeEmoji({
  * Contest Type Component with Safe Emoji
  */
 interface ContestTypeProps {
-  type: 'longDrive' | 'closestToPin';
+  type: "longDrive" | "closestToPin";
   className?: string;
   showLabel?: boolean;
   emojiOnly?: boolean;
 }
 
-export function ContestType({ 
-  type, 
-  className = '', 
+export function ContestType({
+  type,
+  className = "",
   showLabel = true,
-  emojiOnly = false 
+  emojiOnly = false,
 }: ContestTypeProps) {
-  const emojiConfig = type === 'longDrive' ? GOLF_EMOJIS.LONG_DRIVE : GOLF_EMOJIS.CLOSEST_TO_PIN;
-  
+  const emojiConfig =
+    type === "longDrive" ? GOLF_EMOJIS.LONG_DRIVE : GOLF_EMOJIS.CLOSEST_TO_PIN;
+
   if (emojiOnly) {
-    return <SafeEmoji emoji={emojiConfig} className={className} fallbackMode="text" />;
+    return (
+      <SafeEmoji
+        emoji={emojiConfig}
+        className={className}
+        fallbackMode="text"
+      />
+    );
   }
 
   return (
     <span className={className}>
       <SafeEmoji emoji={emojiConfig} fallbackMode="hidden" />
-      {showLabel && (
-        <>
-          {' '}
-          {emojiConfig.description}
-        </>
-      )}
+      {showLabel && <> {emojiConfig.description}</>}
     </span>
   );
 }

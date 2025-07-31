@@ -65,8 +65,8 @@ export function HoleEdit() {
     contestHoles.longDrive.includes(holeNumber) ||
     contestHoles.closestToPin.includes(holeNumber);
   const contestTypeKey = contestHoles.longDrive.includes(holeNumber)
-    ? 'longDrive' as const
-    : 'closestToPin' as const;
+    ? ("longDrive" as const)
+    : ("closestToPin" as const);
 
   const isQuicksands = roundName === "Quicksands";
   const teams = [
@@ -451,7 +451,9 @@ export function HoleEdit() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-gray-900 dark:text-gray-100">Loading...</div>
+        <div className="text-center text-gray-900 dark:text-gray-100">
+          Loading...
+        </div>
       </div>
     );
   }
@@ -462,7 +464,11 @@ export function HoleEdit() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <Link to={`/scorecard/${encodeURIComponent(roundName)}`}>
-            <Button variant="ghost" size="sm" className="gap-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back
             </Button>
@@ -574,7 +580,9 @@ export function HoleEdit() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <label className="font-medium text-gray-900 dark:text-gray-100">Winner</label>
+                <label className="font-medium text-gray-900 dark:text-gray-100">
+                  Winner
+                </label>
                 <Select value={contestWinner} onValueChange={setContestWinner}>
                   <SelectTrigger className="w-40">
                     <SelectValue />

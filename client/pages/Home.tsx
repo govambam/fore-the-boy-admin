@@ -35,9 +35,13 @@ export function Home({ onLogout }: HomeProps) {
               className="h-12 w-12 object-contain"
             />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Fore the Boy</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Fore the Boy
+          </h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 text-lg">Score Entry System</p>
+        <p className="text-gray-600 dark:text-gray-300 text-lg">
+          Score Entry System
+        </p>
         <div className="flex items-center justify-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
           <Users className="h-4 w-4" />
           <span>Ivan • Patrick • Jack • Marshall</span>
@@ -108,7 +112,9 @@ export function Home({ onLogout }: HomeProps) {
           <Trophy className="h-4 w-4" />
           View the Leaderboard
         </a>
-        <p className="text-xs text-gray-400 dark:text-gray-500">Admin Score Entry System</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">
+          Admin Score Entry System
+        </p>
       </div>
     </div>
   );
