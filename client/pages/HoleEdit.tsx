@@ -208,7 +208,17 @@ export function HoleEdit() {
         if (contestError) throw contestError;
       }
 
-      toast.success("Hole data saved successfully!");
+      // Provide feedback about what was saved/deleted
+      let message = "Hole data saved successfully!";
+      if (deletedScores > 0 && scoresToInsert.length > 0) {
+        message = `Saved ${scoresToInsert.length} scores and removed ${deletedScores} scores.`;
+      } else if (deletedScores > 0) {
+        message = `Removed ${deletedScores} scores from hole ${holeNumber}.`;
+      } else if (scoresToInsert.length > 0) {
+        message = `Saved ${scoresToInsert.length} scores for hole ${holeNumber}.`;
+      }
+
+      toast.success(message);
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
       console.error("Error saving hole data:", error);
