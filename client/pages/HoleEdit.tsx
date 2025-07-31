@@ -253,12 +253,12 @@ export function HoleEdit() {
 
       // Provide feedback about what was saved/deleted
       let message = "Hole data saved successfully!";
-      if (deletedScores > 0 && scoresToUpsert.length > 0) {
-        message = `Saved ${scoresToUpsert.length} scores and removed ${deletedScores} scores.`;
+      if (deletedScores > 0 && scoresToInsert.length > 0) {
+        message = `Saved ${scoresToInsert.length} scores and removed ${deletedScores} scores.`;
       } else if (deletedScores > 0) {
         message = `Removed ${deletedScores} scores from hole ${holeNumber}.`;
-      } else if (scoresToUpsert.length > 0) {
-        message = `Saved ${scoresToUpsert.length} scores for hole ${holeNumber}.`;
+      } else if (scoresToInsert.length > 0) {
+        message = `Saved ${scoresToInsert.length} scores for hole ${holeNumber}.`;
       }
 
       toast.success(message);
