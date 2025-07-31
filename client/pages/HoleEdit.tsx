@@ -24,6 +24,7 @@ import {
 } from "../components/ui/select";
 import { ArrowLeft, Save, X, Trash2 } from "lucide-react";
 import { DarkModeToggle } from "../components/DarkModeToggle";
+import { ContestType } from "../components/SafeEmoji";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -63,9 +64,9 @@ export function HoleEdit() {
   const hasContest =
     contestHoles.longDrive.includes(holeNumber) ||
     contestHoles.closestToPin.includes(holeNumber);
-  const contestType = contestHoles.longDrive.includes(holeNumber)
-    ? "🏌 Long Drive"
-    : "🎯 Closest to the Pin";
+  const contestTypeKey = contestHoles.longDrive.includes(holeNumber)
+    ? 'longDrive' as const
+    : 'closestToPin' as const;
 
   const isQuicksands = roundName === "Quicksands";
   const teams = [
@@ -476,7 +477,9 @@ export function HoleEdit() {
               </div>
             </div>
             {hasContest && (
-              <p className="text-orange-600 dark:text-orange-400 font-medium">{contestType}</p>
+              <p className="text-orange-600 dark:text-orange-400 font-medium">
+                <ContestType type={contestTypeKey} />
+              </p>
             )}
           </div>
         </div>
@@ -566,7 +569,7 @@ export function HoleEdit() {
           <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
-                {contestType}
+                <ContestType type={contestTypeKey} />
               </CardTitle>
             </CardHeader>
             <CardContent>
