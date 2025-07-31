@@ -12,9 +12,8 @@ interface HomeProps {
 export function Home({ onLogout }: HomeProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      {/* Header with dark mode toggle and logout */}
-      <div className="flex justify-between items-center mb-4">
-        <DarkModeToggle />
+      {/* Logout button in top right */}
+      <div className="flex justify-end mb-4">
         <Button
           variant="ghost"
           size="sm"
