@@ -391,14 +391,14 @@ export function HoleEdit() {
         console.log(`Delete result for ${uniqueHoleId}:`, deleteResult);
       }
 
-      // Delete contest for this hole
+      // Delete contest for this hole using unique_contest_id
+      const uniqueContestId = generateUniqueContestId(roundName, holeNumber);
       const deleteContestResult = await supabase
         .from("contests")
         .delete()
-        .eq("round", roundName)
-        .eq("hole_number", holeNumber);
+        .eq("unique_contest_id", uniqueContestId);
 
-      console.log("Delete contest result:", deleteContestResult);
+      console.log(`Delete contest result for ${uniqueContestId}:`, deleteContestResult);
 
       // Reset local state
       setScores({
