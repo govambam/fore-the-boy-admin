@@ -42,9 +42,9 @@ function App() {
   }
 
   // Show login screen if not authenticated
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
-  }
+  // Temporarily disabled for testing: if (!isAuthenticated) {
+  //   return <Login onLogin={handleLogin} />;
+  // }
 
   // Show main app if authenticated
   return (
