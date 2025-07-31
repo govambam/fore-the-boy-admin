@@ -319,14 +319,30 @@ export function HoleEdit() {
     try {
       console.log("Starting clear for hole", holeNumber, "in round", roundName);
 
-      // Delete all scores for this hole
-      const deleteScoresResult = await supabase
-        .from("scores")
-        .delete()
-        .eq("round", roundName)
-        .eq("hole_number", holeNumber);
+      // Generate unique_hole_ids for all players/teams and delete them
+      let uniqueHoleIds = [];
 
-      console.log("Delete scores result:", deleteScoresResult);
+      if (isQuicksands) {
+        // For Quicksands, delete team lead scores
+        teams.forEach((team) => {
+          uniqueHoleIds.push(generateUniqueHoleId(team.lead, roundName, holeNumber));
+        });
+      } else {
+        // For other rounds, delete all player scores
+        PLAYERS.forEach((player) => {
+          uniqueHoleIds.push(generateUniqueHoleId(player, roundName, holeNumber));
+        });
+      }
+
+      // Delete all scores using unique_hole_id
+      for (const uniqueHoleId of uniqueHoleIds) {
+        const deleteResult = await supabase
+          .from("scores")
+          .delete()
+          .eq("unique_hole_id", uniqueHoleId);
+
+        console.log(`Delete result for ${uniqueHoleId}:`, deleteResult);
+      }
 
       // Delete contest for this hole
       const deleteContestResult = await supabase
