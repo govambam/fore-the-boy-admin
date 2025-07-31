@@ -16,6 +16,7 @@ function App() {
   // Check for existing authentication on app load
   useEffect(() => {
     const authStatus = localStorage.getItem("golfTournamentAuth");
+    console.log("Auth status from localStorage:", authStatus); // Debug log
     if (authStatus === "authenticated") {
       setIsAuthenticated(true);
     }
