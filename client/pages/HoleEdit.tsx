@@ -157,7 +157,11 @@ export function HoleEdit() {
     setTeamScores((prev) => ({ ...prev, [team]: value }));
   };
 
-  const generateUniqueHoleId = (playerName: string, round: string, holeNumber: number) => {
+  const generateUniqueHoleId = (
+    playerName: string,
+    round: string,
+    holeNumber: number,
+  ) => {
     return `${playerName}-${round}-${holeNumber}`;
   };
 
@@ -176,7 +180,11 @@ export function HoleEdit() {
         // For Quicksands, save team scores using team lead players
         teams.forEach((team) => {
           const teamScore = teamScores[team.name];
-          const uniqueHoleId = generateUniqueHoleId(team.lead, roundName, holeNumber);
+          const uniqueHoleId = generateUniqueHoleId(
+            team.lead,
+            roundName,
+            holeNumber,
+          );
 
           if (teamScore !== "-" && teamScore !== "") {
             scoresToUpsert.push({
@@ -195,7 +203,11 @@ export function HoleEdit() {
         // For other rounds, save individual player scores
         PLAYERS.forEach((player) => {
           const playerScore = scores[player];
-          const uniqueHoleId = generateUniqueHoleId(player, roundName, holeNumber);
+          const uniqueHoleId = generateUniqueHoleId(
+            player,
+            roundName,
+            holeNumber,
+          );
 
           if (playerScore !== "-" && playerScore !== "") {
             scoresToUpsert.push({
@@ -226,7 +238,10 @@ export function HoleEdit() {
         console.log(`Delete result for ${uniqueHoleId}:`, deleteResult);
 
         if (deleteResult.error) {
-          console.error("Delete error details:", JSON.stringify(deleteResult.error, null, 2));
+          console.error(
+            "Delete error details:",
+            JSON.stringify(deleteResult.error, null, 2),
+          );
           throw deleteResult.error;
         }
       }
@@ -243,7 +258,10 @@ export function HoleEdit() {
         console.log("Upsert scores result:", upsertResult);
 
         if (upsertResult.error) {
-          console.error("Upsert error details:", JSON.stringify(upsertResult.error, null, 2));
+          console.error(
+            "Upsert error details:",
+            JSON.stringify(upsertResult.error, null, 2),
+          );
           throw upsertResult.error;
         }
       }
@@ -268,7 +286,10 @@ export function HoleEdit() {
             });
 
           if (contestError) {
-            console.error("Contest insert error details:", JSON.stringify(contestError, null, 2));
+            console.error(
+              "Contest insert error details:",
+              JSON.stringify(contestError, null, 2),
+            );
             throw contestError;
           }
         }
@@ -292,10 +313,10 @@ export function HoleEdit() {
       console.error("Error constructor:", error?.constructor?.name);
 
       let errorMessage = "Unknown error";
-      if (error && typeof error === 'object') {
-        if ('message' in error) {
+      if (error && typeof error === "object") {
+        if ("message" in error) {
           errorMessage = error.message;
-        } else if ('error' in error) {
+        } else if ("error" in error) {
           errorMessage = error.error;
         } else {
           errorMessage = JSON.stringify(error);
@@ -325,12 +346,16 @@ export function HoleEdit() {
       if (isQuicksands) {
         // For Quicksands, delete team lead scores
         teams.forEach((team) => {
-          uniqueHoleIds.push(generateUniqueHoleId(team.lead, roundName, holeNumber));
+          uniqueHoleIds.push(
+            generateUniqueHoleId(team.lead, roundName, holeNumber),
+          );
         });
       } else {
         // For other rounds, delete all player scores
         PLAYERS.forEach((player) => {
-          uniqueHoleIds.push(generateUniqueHoleId(player, roundName, holeNumber));
+          uniqueHoleIds.push(
+            generateUniqueHoleId(player, roundName, holeNumber),
+          );
         });
       }
 
@@ -369,13 +394,16 @@ export function HoleEdit() {
       toast.success(`Cleared all data for hole ${holeNumber}`);
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
-      console.error("Error clearing hole data:", JSON.stringify(error, null, 2));
+      console.error(
+        "Error clearing hole data:",
+        JSON.stringify(error, null, 2),
+      );
 
       let errorMessage = "Unknown error";
-      if (error && typeof error === 'object') {
-        if ('message' in error) {
+      if (error && typeof error === "object") {
+        if ("message" in error) {
           errorMessage = error.message;
-        } else if ('error' in error) {
+        } else if ("error" in error) {
           errorMessage = error.error;
         } else {
           errorMessage = JSON.stringify(error);
