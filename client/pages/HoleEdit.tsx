@@ -4,6 +4,7 @@ import {
   supabase,
   PLAYERS,
   CONTEST_HOLES,
+  PAR_SCORES,
   Round,
   Player,
 } from "../lib/supabase";
