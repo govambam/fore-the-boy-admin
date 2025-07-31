@@ -14,38 +14,34 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing Supabase session on app load
+  // Check for existing session on app load
   useEffect(() => {
-    const getSession = async () => {
+    const checkSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const sessionData = localStorage.getItem("golfTournamentSession");
 
-        if (error) {
-          console.error("Error getting session:", error);
-        } else if (session) {
-          setIsAuthenticated(true);
+        if (sessionData) {
+          const session = JSON.parse(sessionData);
+          const currentTime = Date.now();
+
+          // Check if session is valid and not expired
+          if (session.authenticated && session.expires > currentTime) {
+            setIsAuthenticated(true);
+          } else {
+            // Session expired, remove it
+            localStorage.removeItem("golfTournamentSession");
+          }
         }
       } catch (error) {
         console.error("Error during session recovery:", error);
+        // Clear invalid session data
+        localStorage.removeItem("golfTournamentSession");
       } finally {
         setIsLoading(false);
       }
     };
 
-    getSession();
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    checkSession();
   }, []);
 
   const handleLogin = async (password: string) => {
