@@ -26,8 +26,12 @@ export function Home({ onLogout }: HomeProps) {
 
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 bg-green-600 rounded-full">
-            <Trophy className="h-8 w-8 text-white" />
+          <div className="w-14 h-14 flex items-center justify-center">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F8c34f0d0a3de41e1a3ea5bdb8f56cf8c%2F2ce88ead0e884635bc591c43e8b78e7e"
+              alt="Fore the Boy Logo"
+              className="h-12 w-12 object-contain"
+            />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Fore the Boy</h1>
         </div>
@@ -94,7 +98,7 @@ export function Home({ onLogout }: HomeProps) {
 
       <div className="mt-12 text-center space-y-3">
         <a
-          href="https://www.foretheboy.com"
+          href="https://www.foretheboy.com/leaderboard"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm transition-colors"
