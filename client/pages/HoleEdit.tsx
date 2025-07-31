@@ -305,7 +305,10 @@ export function HoleEdit() {
             .delete()
             .eq("unique_contest_id", uniqueContestId);
 
-          console.log(`Delete contest result for ${uniqueContestId}:`, deleteResult);
+          console.log(
+            `Delete contest result for ${uniqueContestId}:`,
+            deleteResult,
+          );
 
           if (deleteResult.error) {
             console.error(
@@ -398,7 +401,10 @@ export function HoleEdit() {
         .delete()
         .eq("unique_contest_id", uniqueContestId);
 
-      console.log(`Delete contest result for ${uniqueContestId}:`, deleteContestResult);
+      console.log(
+        `Delete contest result for ${uniqueContestId}:`,
+        deleteContestResult,
+      );
 
       // Reset local state
       setScores({
