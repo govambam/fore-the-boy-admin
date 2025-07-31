@@ -19,6 +19,7 @@ export interface Contest {
   round: string;
   hole_number: number;
   winner_name: string;
+  unique_contest_id: string;
 }
 
 export type Player = "Ivan" | "Patrick" | "Jack" | "Marshall";
