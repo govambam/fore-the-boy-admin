@@ -30,7 +30,7 @@ export const CONTEST_HOLES: Record<
   { longDrive: number[]; closestToPin: number[] }
 > = {
   Scarecrow: {
-    longDrive: [3, 6, 15],
+    longDrive: [3, 6, 12, 15],
     closestToPin: [2, 4, 9, 11, 16],
   },
   "Gamble Sands": {
