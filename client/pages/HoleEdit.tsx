@@ -280,7 +280,8 @@ export function HoleEdit() {
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
       console.error("Error saving hole data:", error);
-      toast.error("Failed to save hole data");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to save hole data: ${errorMessage}`);
     } finally {
       setSaving(false);
     }
