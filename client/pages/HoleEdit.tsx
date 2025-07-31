@@ -225,34 +225,29 @@ export function HoleEdit() {
         }
       }
 
-      // Handle contest winner (upsert or delete)
+      // Handle contest winner (delete existing, then insert if needed)
       if (hasContest) {
+        // Always delete existing contest for this hole first
+        await supabase
+          .from("contests")
+          .delete()
+          .eq("round", roundName)
+          .eq("hole_number", holeNumber);
+
+        // Insert new contest winner if not "-"
         if (contestWinner !== "-" && contestWinner !== "") {
           const { error: contestError } = await supabase
             .from("contests")
-            .upsert(
-              {
-                round: roundName,
-                hole_number: holeNumber,
-                winner_name: contestWinner,
-              },
-              {
-                onConflict: "round,hole_number",
-                ignoreDuplicates: false,
-              },
-            );
+            .insert({
+              round: roundName,
+              hole_number: holeNumber,
+              winner_name: contestWinner,
+            });
 
           if (contestError) {
-            console.error("Contest upsert error details:", JSON.stringify(contestError, null, 2));
+            console.error("Contest insert error details:", JSON.stringify(contestError, null, 2));
             throw contestError;
           }
-        } else {
-          // Delete contest if winner is set to "-"
-          await supabase
-            .from("contests")
-            .delete()
-            .eq("round", roundName)
-            .eq("hole_number", holeNumber);
         }
       }
 
