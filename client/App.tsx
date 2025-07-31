@@ -50,30 +50,14 @@ function App() {
 
   const handleLogin = async (password: string) => {
     try {
-      // Use a custom auth approach with the hardcoded password
       if (password === "Trigga") {
-        // Create a custom session by signing in with a dummy email
-        const { error } = await supabase.auth.signInWithPassword({
-          email: 'admin@foretheboy.com',
-          password: 'Trigga123!' // We'll need to create this user in Supabase
-        });
-
-        if (error) {
-          // Fallback to creating the user if it doesn't exist
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: 'admin@foretheboy.com',
-            password: 'Trigga123!'
-          });
-
-          if (!signUpError) {
-            // Now sign in
-            await supabase.auth.signInWithPassword({
-              email: 'admin@foretheboy.com',
-              password: 'Trigga123!'
-            });
-          }
-        }
-
+        // Store authentication state in localStorage with session-like behavior
+        const authSession = {
+          authenticated: true,
+          timestamp: Date.now(),
+          expires: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+        };
+        localStorage.setItem("golfTournamentSession", JSON.stringify(authSession));
         setIsAuthenticated(true);
         return { success: true };
       } else {
@@ -87,7 +71,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      localStorage.removeItem("golfTournamentSession");
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout error:", error);
