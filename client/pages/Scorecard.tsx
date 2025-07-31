@@ -21,6 +21,7 @@ import {
 import { ArrowLeft, Trophy, Target } from "lucide-react";
 import { cn } from "../lib/utils";
 import { DarkModeToggle } from "../components/DarkModeToggle";
+import { ContestType } from "../components/SafeEmoji";
 
 export function Scorecard() {
   const { round } = useParams<{ round: string }>();
@@ -147,9 +148,9 @@ export function Scorecard() {
     );
   };
 
-  const getContestType = (hole: number) => {
-    if (contestHoles.longDrive.includes(hole)) return "🏌 Long Drive";
-    if (contestHoles.closestToPin.includes(hole)) return "🎯 Closest to Pin";
+  const getContestType = (hole: number): 'longDrive' | 'closestToPin' | null => {
+    if (contestHoles.longDrive.includes(hole)) return 'longDrive';
+    if (contestHoles.closestToPin.includes(hole)) return 'closestToPin';
     return null;
   };
 
@@ -200,10 +201,10 @@ export function Scorecard() {
                     <span>Par {getPar(hole)}</span>
                   </div>
                 </div>
-                {hasContest(hole) && (
+                {hasContest(hole) && getContestType(hole) && (
                   <div className="flex items-center gap-1 text-xs bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-2 py-1 rounded">
-                    <Trophy className="h-3 w-3" />
-                    <span>{getContestType(hole)}</span>
+                    <ContestType type={getContestType(hole)!} emojiOnly className="text-xs" />
+                    <span>{getContestType(hole) === 'longDrive' ? 'Long Drive' : 'Closest to Pin'}</span>
                   </div>
                 )}
               </div>
@@ -292,14 +293,9 @@ export function Scorecard() {
                           <span className="font-semibold text-gray-900 dark:text-gray-100">
                             {hole}
                           </span>
-                          {hasContest(hole) && (
+                          {hasContest(hole) && getContestType(hole) && (
                             <div className="text-xs text-orange-600 dark:text-orange-400">
-                              {contestHoles.longDrive.includes(hole) && (
-                                <Trophy className="h-3 w-3" />
-                              )}
-                              {contestHoles.closestToPin.includes(hole) && (
-                                <Target className="h-3 w-3" />
-                              )}
+                              <ContestType type={getContestType(hole)!} emojiOnly className="text-xs" />
                             </div>
                           )}
                           {getContestWinner(hole) && (
