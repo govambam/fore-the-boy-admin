@@ -230,7 +230,7 @@ export function HoleEdit() {
           .from("scores")
           .upsert(scoresToUpsert, {
             onConflict: "player_name,round,hole_number",
-            ignoreDuplicates: false
+            ignoreDuplicates: false,
           });
 
         console.log("Upsert scores result:", upsertResult);
@@ -243,14 +243,17 @@ export function HoleEdit() {
         if (contestWinner !== "-" && contestWinner !== "") {
           const { error: contestError } = await supabase
             .from("contests")
-            .upsert({
-              round: roundName,
-              hole_number: holeNumber,
-              winner_name: contestWinner,
-            }, {
-              onConflict: "round,hole_number",
-              ignoreDuplicates: false
-            });
+            .upsert(
+              {
+                round: roundName,
+                hole_number: holeNumber,
+                winner_name: contestWinner,
+              },
+              {
+                onConflict: "round,hole_number",
+                ignoreDuplicates: false,
+              },
+            );
 
           if (contestError) throw contestError;
         } else {
@@ -498,7 +501,9 @@ export function HoleEdit() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Clear Hole Data</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete all scores and contest data for Hole {holeNumber} in {roundName}. This action cannot be undone.
+                  This will permanently delete all scores and contest data for
+                  Hole {holeNumber} in {roundName}. This action cannot be
+                  undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
