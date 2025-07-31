@@ -165,6 +165,10 @@ export function HoleEdit() {
     return `${playerName}-${round}-${holeNumber}`;
   };
 
+  const generateUniqueContestId = (round: string, holeNumber: number) => {
+    return `${round}-${holeNumber}`;
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -266,31 +270,49 @@ export function HoleEdit() {
         }
       }
 
-      // Handle contest winner (delete existing, then insert if needed)
+      // Handle contest winner (upsert or delete using unique_contest_id)
       if (hasContest) {
-        // Always delete existing contest for this hole first
-        await supabase
-          .from("contests")
-          .delete()
-          .eq("round", roundName)
-          .eq("hole_number", holeNumber);
+        const uniqueContestId = generateUniqueContestId(roundName, holeNumber);
 
-        // Insert new contest winner if not "-"
         if (contestWinner !== "-" && contestWinner !== "") {
+          // Upsert contest winner using unique_contest_id
           const { error: contestError } = await supabase
             .from("contests")
-            .insert({
-              round: roundName,
-              hole_number: holeNumber,
-              winner_name: contestWinner,
-            });
+            .upsert(
+              {
+                round: roundName,
+                hole_number: holeNumber,
+                winner_name: contestWinner,
+                unique_contest_id: uniqueContestId,
+              },
+              {
+                onConflict: "unique_contest_id",
+                ignoreDuplicates: false,
+              },
+            );
 
           if (contestError) {
             console.error(
-              "Contest insert error details:",
+              "Contest upsert error details:",
               JSON.stringify(contestError, null, 2),
             );
             throw contestError;
+          }
+        } else {
+          // Delete contest if winner is set to "-"
+          const deleteResult = await supabase
+            .from("contests")
+            .delete()
+            .eq("unique_contest_id", uniqueContestId);
+
+          console.log(`Delete contest result for ${uniqueContestId}:`, deleteResult);
+
+          if (deleteResult.error) {
+            console.error(
+              "Contest delete error details:",
+              JSON.stringify(deleteResult.error, null, 2),
+            );
+            throw deleteResult.error;
           }
         }
       }
