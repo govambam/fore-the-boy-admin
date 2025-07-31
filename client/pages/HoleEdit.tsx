@@ -235,7 +235,15 @@ export function HoleEdit() {
 
         console.log("Upsert scores result:", upsertResult);
 
-        if (upsertResult.error) throw upsertResult.error;
+        if (upsertResult.error) {
+          console.error("Upsert error details:", {
+            message: upsertResult.error.message,
+            details: upsertResult.error.details,
+            hint: upsertResult.error.hint,
+            code: upsertResult.error.code
+          });
+          throw upsertResult.error;
+        }
       }
 
       // Handle contest winner (upsert or delete)
