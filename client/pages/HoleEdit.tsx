@@ -576,7 +576,7 @@ export function HoleEdit() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <label className="font-medium text-gray-900 dark:text-gray-100">
                   Winner
                 </label>
