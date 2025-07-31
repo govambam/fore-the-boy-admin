@@ -203,12 +203,17 @@ export function HoleEdit() {
         });
       }
 
+      console.log("Scores to insert:", scoresToInsert);
+      console.log("Deleted scores count:", deletedScores);
+
       if (scoresToInsert.length > 0) {
-        const { error: scoresError } = await supabase
+        const insertResult = await supabase
           .from("scores")
           .insert(scoresToInsert);
 
-        if (scoresError) throw scoresError;
+        console.log("Insert scores result:", insertResult);
+
+        if (insertResult.error) throw insertResult.error;
       }
 
       // Insert contest winner (only if not "-")
