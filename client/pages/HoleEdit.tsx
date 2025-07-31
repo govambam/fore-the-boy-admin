@@ -352,8 +352,21 @@ export function HoleEdit() {
       toast.success(`Cleared all data for hole ${holeNumber}`);
       navigate(`/scorecard/${encodeURIComponent(roundName)}`);
     } catch (error) {
-      console.error("Error clearing hole data:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error("Error clearing hole data:", JSON.stringify(error, null, 2));
+
+      let errorMessage = "Unknown error";
+      if (error && typeof error === 'object') {
+        if ('message' in error) {
+          errorMessage = error.message;
+        } else if ('error' in error) {
+          errorMessage = error.error;
+        } else {
+          errorMessage = JSON.stringify(error);
+        }
+      } else {
+        errorMessage = String(error);
+      }
+
       toast.error(`Failed to clear hole data: ${errorMessage}`);
     } finally {
       setClearing(false);
