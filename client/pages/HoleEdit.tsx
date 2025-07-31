@@ -153,8 +153,9 @@ export function HoleEdit() {
         .eq("round", roundName)
         .eq("hole_number", holeNumber);
 
-      // Insert new scores
+      // Insert new scores (scores set to "-" are effectively deleted since we don't insert them)
       let scoresToInsert = [];
+      let deletedScores = 0;
 
       if (isQuicksands) {
         // For Quicksands, save team scores using team lead players
@@ -167,18 +168,25 @@ export function HoleEdit() {
               hole_number: holeNumber,
               strokes: parseInt(teamScore),
             });
+          } else if (teamScore === "-") {
+            deletedScores++;
           }
         });
       } else {
         // For other rounds, save individual player scores
-        scoresToInsert = PLAYERS.filter(
-          (player) => scores[player] !== "-" && scores[player] !== "",
-        ).map((player) => ({
-          player_name: player,
-          round: roundName,
-          hole_number: holeNumber,
-          strokes: parseInt(scores[player]),
-        }));
+        PLAYERS.forEach((player) => {
+          const playerScore = scores[player];
+          if (playerScore !== "-" && playerScore !== "") {
+            scoresToInsert.push({
+              player_name: player,
+              round: roundName,
+              hole_number: holeNumber,
+              strokes: parseInt(playerScore),
+            });
+          } else if (playerScore === "-") {
+            deletedScores++;
+          }
+        });
       }
 
       if (scoresToInsert.length > 0) {
