@@ -94,11 +94,26 @@ function App() {
     }
   };
 
-  // Show loading screen briefly while checking auth
+  // Show loading screen while checking session
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-green-600 rounded-full">
+              <svg className="h-8 w-8 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M5 4h14v2H5V4zm0 4h14v2H5V8zm0 4h14v2H5v-2zm0 4h14v2H5v-2z"/>
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">Fore the Boy</h1>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+            <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          </div>
+          <p className="text-gray-600 mt-2">Loading tournament...</p>
+        </div>
       </div>
     );
   }
