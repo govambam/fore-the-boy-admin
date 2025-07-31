@@ -87,6 +87,7 @@ function App() {
     return (
       <DarkModeProvider>
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center transition-colors">
+          <DarkModeToggle />
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="p-3 bg-green-600 dark:bg-green-500 rounded-full">
