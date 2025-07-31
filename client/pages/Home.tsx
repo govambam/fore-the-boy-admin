@@ -3,7 +3,7 @@ import { ROUNDS } from "../lib/supabase";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Users, Trophy, LogOut } from "lucide-react";
-import { DarkModeToggle } from "../components/DarkModeToggle";
+
 
 interface HomeProps {
   onLogout: () => void;
