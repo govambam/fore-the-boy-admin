@@ -64,6 +64,10 @@ export function HoleEdit() {
     },
   ];
 
+  const getPar = () => {
+    return PAR_SCORES[roundName]?.[holeNumber] || 3;
+  };
+
   useEffect(() => {
     loadHoleData();
 
