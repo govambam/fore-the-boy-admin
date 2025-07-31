@@ -281,6 +281,19 @@ export function Scorecard() {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* Par row */}
+                  <tr className="border-b-2 bg-blue-50">
+                    <td className="p-4 font-semibold text-blue-700 sticky left-0 bg-blue-50 z-10">
+                      Par
+                    </td>
+                    {holes.map((hole) => (
+                      <td key={hole} className="p-3 text-center">
+                        <div className="w-8 h-8 rounded-full bg-blue-200 text-blue-800 font-semibold flex items-center justify-center text-sm">
+                          {getPar(hole)}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
                   {isQuicksands
                     ? teams.map((team) => (
                         <tr
