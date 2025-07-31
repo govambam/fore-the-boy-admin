@@ -157,37 +157,37 @@ export function HoleEdit() {
     setTeamScores((prev) => ({ ...prev, [team]: value }));
   };
 
+  const generateUniqueHoleId = (playerName: string, round: string, holeNumber: number) => {
+    return `${playerName}-${round}-${holeNumber}`;
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
       console.log("Starting save for hole", holeNumber, "in round", roundName);
       console.log("Current scores:", isQuicksands ? teamScores : scores);
 
-      // Delete existing scores for this hole first, then insert new ones
-      const deleteResult = await supabase
-        .from("scores")
-        .delete()
-        .eq("round", roundName)
-        .eq("hole_number", holeNumber);
-
-      console.log("Delete scores result:", deleteResult);
-
-      // Prepare scores to insert (scores set to "-" are effectively deleted since we don't insert them)
-      let scoresToInsert = [];
+      // Prepare scores to upsert and scores to delete
+      let scoresToUpsert = [];
+      let scoresToDelete = [];
       let deletedScores = 0;
 
       if (isQuicksands) {
         // For Quicksands, save team scores using team lead players
         teams.forEach((team) => {
           const teamScore = teamScores[team.name];
+          const uniqueHoleId = generateUniqueHoleId(team.lead, roundName, holeNumber);
+
           if (teamScore !== "-" && teamScore !== "") {
-            scoresToInsert.push({
+            scoresToUpsert.push({
               player_name: team.lead,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(teamScore),
+              unique_hole_id: uniqueHoleId,
             });
           } else if (teamScore === "-") {
+            scoresToDelete.push(uniqueHoleId);
             deletedScores++;
           }
         });
@@ -195,33 +195,56 @@ export function HoleEdit() {
         // For other rounds, save individual player scores
         PLAYERS.forEach((player) => {
           const playerScore = scores[player];
+          const uniqueHoleId = generateUniqueHoleId(player, roundName, holeNumber);
+
           if (playerScore !== "-" && playerScore !== "") {
-            scoresToInsert.push({
+            scoresToUpsert.push({
               player_name: player,
               round: roundName,
               hole_number: holeNumber,
               strokes: parseInt(playerScore),
+              unique_hole_id: uniqueHoleId,
             });
           } else if (playerScore === "-") {
+            scoresToDelete.push(uniqueHoleId);
             deletedScores++;
           }
         });
       }
 
-      console.log("Scores to insert:", scoresToInsert);
+      console.log("Scores to upsert:", scoresToUpsert);
+      console.log("Scores to delete:", scoresToDelete);
       console.log("Deleted scores count:", deletedScores);
 
-      // Insert new scores
-      if (scoresToInsert.length > 0) {
-        const insertResult = await supabase
+      // Delete scores that were cleared
+      for (const uniqueHoleId of scoresToDelete) {
+        const deleteResult = await supabase
           .from("scores")
-          .insert(scoresToInsert);
+          .delete()
+          .eq("unique_hole_id", uniqueHoleId);
 
-        console.log("Insert scores result:", insertResult);
+        console.log(`Delete result for ${uniqueHoleId}:`, deleteResult);
 
-        if (insertResult.error) {
-          console.error("Insert error details:", JSON.stringify(insertResult.error, null, 2));
-          throw insertResult.error;
+        if (deleteResult.error) {
+          console.error("Delete error details:", JSON.stringify(deleteResult.error, null, 2));
+          throw deleteResult.error;
+        }
+      }
+
+      // Upsert scores that have values
+      if (scoresToUpsert.length > 0) {
+        const upsertResult = await supabase
+          .from("scores")
+          .upsert(scoresToUpsert, {
+            onConflict: "unique_hole_id",
+            ignoreDuplicates: false,
+          });
+
+        console.log("Upsert scores result:", upsertResult);
+
+        if (upsertResult.error) {
+          console.error("Upsert error details:", JSON.stringify(upsertResult.error, null, 2));
+          throw upsertResult.error;
         }
       }
 
@@ -253,12 +276,12 @@ export function HoleEdit() {
 
       // Provide feedback about what was saved/deleted
       let message = "Hole data saved successfully!";
-      if (deletedScores > 0 && scoresToInsert.length > 0) {
-        message = `Saved ${scoresToInsert.length} scores and removed ${deletedScores} scores.`;
+      if (deletedScores > 0 && scoresToUpsert.length > 0) {
+        message = `Saved ${scoresToUpsert.length} scores and removed ${deletedScores} scores.`;
       } else if (deletedScores > 0) {
         message = `Removed ${deletedScores} scores from hole ${holeNumber}.`;
-      } else if (scoresToInsert.length > 0) {
-        message = `Saved ${scoresToInsert.length} scores for hole ${holeNumber}.`;
+      } else if (scoresToUpsert.length > 0) {
+        message = `Saved ${scoresToUpsert.length} scores for hole ${holeNumber}.`;
       }
 
       toast.success(message);
