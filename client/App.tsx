@@ -126,6 +126,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <DarkModeProvider>
+        <DarkModeToggle />
         <Login onLogin={handleLogin} />
       </DarkModeProvider>
     );
