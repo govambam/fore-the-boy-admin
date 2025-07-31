@@ -50,7 +50,7 @@ export function HoleEdit() {
     contestHoles.longDrive.includes(holeNumber) ||
     contestHoles.closestToPin.includes(holeNumber);
   const contestType = contestHoles.longDrive.includes(holeNumber)
-    ? "���� Long Drive"
+    ? "🏌 Long Drive"
     : "🎯 Closest to the Pin";
 
   const isQuicksands = roundName === "Quicksands";
