@@ -236,12 +236,8 @@ export function HoleEdit() {
         console.log("Upsert scores result:", upsertResult);
 
         if (upsertResult.error) {
-          console.error("Upsert error details:", {
-            message: upsertResult.error.message,
-            details: upsertResult.error.details,
-            hint: upsertResult.error.hint,
-            code: upsertResult.error.code
-          });
+          console.error("Upsert error details:", JSON.stringify(upsertResult.error, null, 2));
+          console.error("Full upsert result:", JSON.stringify(upsertResult, null, 2));
           throw upsertResult.error;
         }
       }
