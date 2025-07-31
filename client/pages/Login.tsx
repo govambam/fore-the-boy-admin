@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { Trophy, AlertCircle } from "lucide-react";
-import { DarkModeToggle } from "../components/DarkModeToggle";
+
 
 interface LoginProps {
   onLogin: (password: string) => Promise<{ success: boolean; error?: string }>;
