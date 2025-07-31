@@ -233,9 +233,14 @@ export function HoleEdit() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {roundName} - Hole {holeNumber}
-          </h1>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {roundName} - Hole {holeNumber}
+            </h1>
+            <div className="flex items-center gap-1 text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded">
+              <span>Par {getPar()}</span>
+            </div>
+          </div>
           {hasContest && (
             <p className="text-orange-600 font-medium">{contestType}</p>
           )}
