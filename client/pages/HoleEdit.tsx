@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { ArrowLeft, Save, X, Trash2 } from "lucide-react";
+import { DarkModeToggle } from "../components/DarkModeToggle";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -449,7 +450,7 @@ export function HoleEdit() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+        <div className="text-center text-gray-900 dark:text-gray-100">Loading...</div>
       </div>
     );
   }
@@ -457,33 +458,36 @@ export function HoleEdit() {
   return (
     <div className="container mx-auto px-4 py-6 max-w-2xl">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Link to={`/scorecard/${encodeURIComponent(roundName)}`}>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        </Link>
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-2xl font-bold text-gray-900">
-              {roundName} - Hole {holeNumber}
-            </h1>
-            <div className="flex items-center gap-1 text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded">
-              <span>Par {getPar()}</span>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Link to={`/scorecard/${encodeURIComponent(roundName)}`}>
+            <Button variant="ghost" size="sm" className="gap-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          </Link>
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {roundName} - Hole {holeNumber}
+              </h1>
+              <div className="flex items-center gap-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded">
+                <span>Par {getPar()}</span>
+              </div>
             </div>
+            {hasContest && (
+              <p className="text-orange-600 dark:text-orange-400 font-medium">{contestType}</p>
+            )}
           </div>
-          {hasContest && (
-            <p className="text-orange-600 font-medium">{contestType}</p>
-          )}
         </div>
+        <DarkModeToggle />
       </div>
 
       <div className="space-y-6">
         {/* Scores */}
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle>
+            <CardTitle className="text-gray-900 dark:text-gray-100">
               {isQuicksands ? "Team Scores" : "Player Scores"}
             </CardTitle>
           </CardHeader>
@@ -492,13 +496,13 @@ export function HoleEdit() {
               ? teams.map((team) => (
                   <div
                     key={team.name}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
                   >
                     <div>
-                      <label className="font-medium text-gray-900 block">
+                      <label className="font-medium text-gray-900 dark:text-gray-100 block">
                         {team.name}
                       </label>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
                         {team.players}
                       </span>
                     </div>
@@ -527,9 +531,9 @@ export function HoleEdit() {
               : PLAYERS.map((player) => (
                   <div
                     key={player}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
                   >
-                    <label className="font-medium text-gray-900">
+                    <label className="font-medium text-gray-900 dark:text-gray-100">
                       {player}
                     </label>
                     <Select
@@ -559,15 +563,15 @@ export function HoleEdit() {
 
         {/* Contest Selection */}
         {hasContest && (
-          <Card>
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                 {contestType}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
-                <label className="font-medium text-gray-900">Winner</label>
+              <div className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <label className="font-medium text-gray-900 dark:text-gray-100">Winner</label>
                 <Select value={contestWinner} onValueChange={setContestWinner}>
                   <SelectTrigger className="w-40">
                     <SelectValue />
