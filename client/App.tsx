@@ -59,7 +59,7 @@ function App() {
         console.error("Database error during login:", error);
         return {
           success: false,
-          error: "Authentication failed. Please try again."
+          error: "Authentication failed. Please try again.",
         };
       }
 
