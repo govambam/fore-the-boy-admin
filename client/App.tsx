@@ -48,7 +48,23 @@ function App() {
 
   const handleLogin = async (password: string) => {
     try {
-      if (password === "Trigga") {
+      // Query Supabase passwords table
+      const { data: passwords, error } = await supabase
+        .from("passwords")
+        .select("password")
+        .eq("password", password)
+        .limit(1);
+
+      if (error) {
+        console.error("Database error during login:", error);
+        return {
+          success: false,
+          error: "Authentication failed. Please try again."
+        };
+      }
+
+      // Check if password exists in the database
+      if (passwords && passwords.length > 0) {
         // Store authentication state in localStorage with session-like behavior
         const authSession = {
           authenticated: true,
